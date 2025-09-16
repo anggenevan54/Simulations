@@ -1,2 +1,2 @@
 # Simulations
-Activities for the subject simulations
+Activities for the Course simulations
