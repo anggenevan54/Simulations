@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-# --- Create the deck and starting hands ---
+#Create the deck and starting hands
 def Start():
     deck = list(range(2, 15)) * 4  # 2–14, with 11=J, 12=Q, 13=K, 14=A
     random.shuffle(deck)
@@ -12,7 +12,7 @@ def Start():
     return p1, p2, p1count, pile1, pile2
 
 
-# --- Handle when a player wins a round ---
+#Handle when a player wins a round
 def WinRound(pwin, pilewin, pilelose):
     pwin.extend(pilewin)
     pwin.extend(pilelose)
@@ -20,7 +20,7 @@ def WinRound(pwin, pilewin, pilelose):
     pilelose.clear()
 
 
-# --- Handle a tie situation ---
+#Handle a tie situation
 def Tie(p1, p2, p1count, pile1, pile2):
     if len(p2) > 1:
         N = min(3, len(p2) - 1)
@@ -32,7 +32,7 @@ def Tie(p1, p2, p1count, pile1, pile2):
             pile1.append(p1.pop(0))
 
 
-# --- Play one round ---
+#Play one round
 def Play1(p1, p2, p1count, pile1, pile2):
     pile1.append(p1.pop(0))
     pile2.append(p2.pop(0))
@@ -58,11 +58,11 @@ def Play1(p1, p2, p1count, pile1, pile2):
         return True
 
 
-# --- Play one game to completion ---
-def RunGame(p1, p2, p1count, pile1, pile2):
+#Play one game to completion
+def RunGame(p1, p2, p1count, pile1, pile2, max_rounds=10000):
     ok = True
     rounds = 0
-    while ok:
+    while ok and rounds < max_rounds:
         ok = Play1(p1, p2, p1count, pile1, pile2)
         rounds += 1
     if len(p1) > 1:
@@ -71,27 +71,36 @@ def RunGame(p1, p2, p1count, pile1, pile2):
         return 2, rounds
 
 
-# --- Play many games ---
+#Play many games
 def Go(N=1000):
-    ct = 0
+    wins_p1 = 0
+    wins_p2 = 0
     wrounds = []
+
     for i in range(N):
         p1, p2, p1count, pile1, pile2 = Start()
         win, rounds = RunGame(p1, p2, p1count, pile1, pile2)
-        ct += win
-        if win:
-            wrounds.append(rounds)
+        
+        if win == 1:
+            wins_p1 += 1
+        else:
+            wins_p2 += 1
+        
+        wrounds.append(rounds)
+
     wrounds = np.array(wrounds)
-    return ct, wrounds
+    return wins_p1, wins_p2, wrounds
 
 
-# --- Example run ---
+    #Example run
 if __name__ == "__main__":
     p1, p2, p1count, pile1, pile2 = Start()
     winner, rounds = RunGame(p1, p2, p1count, pile1, pile2)
     print(f"Winner: Player {winner}, Rounds played: {rounds}")
 
-    # Run multiple games
-    total_wins, rounds_list = Go(1000)
-    print(f"\nTotal wins across 1000 games: {total_wins}")
-    print(f"Average rounds: {np.mean(rounds_list):.2f}")
+    #Run multiple games
+    wins_p1, wins_p2, rounds_list = Go()
+    print(f"\nPlayer 1 wins: {wins_p1}")
+    print(f"Player 2 wins: {wins_p2}")
+    print(f"Total games: {wins_p1 + wins_p2}")
+    print(f"Average rounds per game: {np.mean(rounds_list):.2f}")
