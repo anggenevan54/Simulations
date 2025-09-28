@@ -9,10 +9,6 @@ def create_deck():
     return [rank for rank in range(2, 15) for _ in range(4)]
 
 def play_war(max_rounds=100000, war_down=3, track_transfers=False):
-    """
-    Simulate one game of War.
-    Returns: winner (1 or 2), rounds played, initial average of P1 cards, transfer stats (if enabled).
-    """
     deck = create_deck()
     random.shuffle(deck)
 

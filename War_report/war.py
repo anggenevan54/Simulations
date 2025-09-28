@@ -99,7 +99,7 @@ if __name__ == "__main__":
     print(f"Winner: Player {winner}, Rounds played: {rounds}")
 
     #Run multiple games
-    wins_p1, wins_p2, rounds_list = Go()
+    wins_p1, wins_p2, rounds_list = Go(100)
     print(f"\nPlayer 1 wins: {wins_p1}")
     print(f"Player 2 wins: {wins_p2}")
     print(f"Total games: {wins_p1 + wins_p2}")
